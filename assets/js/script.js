@@ -1,7 +1,47 @@
 // Wrap all code that interacts with the DOM in a call to jQuery to ensure that
 // the code isn't run until the browser has finished rendering all the elements
 // in the html.
+
 $(function () {
+  var today = dayjs();
+  let currentHour = dayjs().hour();
+
+  $("#currentDay").text(today.format("MMM D, YYYY"));
+  let savedSchedule = JSON.parse(localStorage.getItem("fullSchedule"));
+  console.log(savedSchedule);
+
+  let fullSchedule = {};
+  if (savedSchedule !== null) {
+    fullSchedule = savedSchedule;
+
+    console.log(fullSchedule);
+
+    for (const key in fullSchedule) {
+      console.log(`${key}: ${fullSchedule[key]}`);
+
+      let hourID = `#${key}`;
+      console.log($(hourID));
+
+      console.log($(hourID)[0].children[1]);
+      $(hourID)[0].children[1].value = fullSchedule[key];
+    }
+  }
+
+  $("button").click(function () {
+    let scheduleElement = $(this).parent();
+
+    let scheduleHour = scheduleElement[0].id;
+    console.log(scheduleHour);
+
+    let newscheduleItem = $(this).siblings("textarea").val();
+
+    console.log(newscheduleItem);
+
+    fullSchedule[scheduleHour] = newscheduleItem;
+
+    localStorage.setItem("fullSchedule", JSON.stringify(fullSchedule));
+  });
+
   // TODO: Add a listener for click events on the save button. This code should
   // use the id in the containing time-block as a key to save the user input in
   // local storage. HINT: What does `this` reference in the click listener
